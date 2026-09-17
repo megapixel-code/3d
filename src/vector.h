@@ -1,0 +1,64 @@
+#ifndef VECTOR_H
+#define VECTOR_H
+
+#include "../external/raylib.h"
+
+#include <math.h>
+#include <stdio.h>
+
+//
+// ============= { OPERATION OVERLOADING }
+//
+
+inline Vector3 Vect3_add(Vector3 vector, Vector3 other)
+{
+   return (Vector3){ .x = vector.x + other.x,
+                     .y = vector.y + other.y,
+                     .z = vector.z + other.z };
+}
+
+inline Vector3 Vect3_substract(Vector3 vector, Vector3 other)
+{
+   return (Vector3){ .x = vector.x - other.x,
+                     .y = vector.y - other.y,
+                     .z = vector.z - other.z };
+}
+
+inline Vector3 Vect3_divide(Vector3 vector, float_t value)
+{
+   return (Vector3){ .x = vector.x / value,
+                     .y = vector.y / value,
+                     .z = vector.z / value };
+}
+
+inline Vector3 Vect3_mult(Vector3 vector, float_t value)
+{
+   return (Vector3){ .x = vector.x * value,
+                     .y = vector.y * value,
+                     .z = vector.z * value };
+}
+
+//
+// =========== { END OPERATION OVERLOADING }
+//
+
+inline float_t Vect3_length_squared(Vector3 vector)
+{
+   return pow(vector.x, 2) + pow(vector.y, 2) + pow(vector.z, 2);
+}
+
+inline float_t Vect3_length(Vector3 vector)
+{
+   return sqrt(Vect3_length_squared(vector));
+}
+
+inline Vector3 Vect3_reverse(Vector3 vector)
+{
+   return Vect3_mult(vector, -1);
+}
+
+Vector3 Vect3_normalize(Vector3 vector);
+
+void Vect3_display(Vector3 vector);
+
+#endif
