@@ -6,7 +6,7 @@
 
 int main()
 {
-   int *list = L_init(sizeof(int));
+   int *list = NULL;
 
    L_append(list, 4);
    L_append(list, 4);

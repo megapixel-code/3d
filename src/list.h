@@ -28,6 +28,9 @@ void *WARN_UNUSED L_ensure_index(void *list, size_t max_index);
 
 #define L_append(list, data)                                         \
    do {                                                              \
+      if ( list == NULL ) {                                          \
+         list = L_init(sizeof(*list));                               \
+      }                                                              \
       Header *header        = L_get_header(list);                    \
       list                  = L_ensure_index(list, header->cur_len); \
       list[header->cur_len] = data;                                  \
