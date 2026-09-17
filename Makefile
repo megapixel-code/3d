@@ -2,7 +2,9 @@ CC := gcc
 CFLAGS := -Wall -Wextra
 MODULES := main \
            position \
-           vector
+           vector \
+           list \
+           matrix
 
 .PHONY = all clean
 all: build/ out/ out/main

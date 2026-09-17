@@ -17,14 +17,14 @@ inline Vector3 Vect3_add(Vector3 vector, Vector3 other)
                      .z = vector.z + other.z };
 }
 
-inline Vector3 Vect3_substract(Vector3 vector, Vector3 other)
+inline Vector3 Vect3_sub(Vector3 vector, Vector3 other)
 {
    return (Vector3){ .x = vector.x - other.x,
                      .y = vector.y - other.y,
                      .z = vector.z - other.z };
 }
 
-inline Vector3 Vect3_divide(Vector3 vector, float_t value)
+inline Vector3 Vect3_div(Vector3 vector, float_t value)
 {
    return (Vector3){ .x = vector.x / value,
                      .y = vector.y / value,
@@ -36,6 +36,18 @@ inline Vector3 Vect3_mult(Vector3 vector, float_t value)
    return (Vector3){ .x = vector.x * value,
                      .y = vector.y * value,
                      .z = vector.z * value };
+}
+
+inline Vector3 Vect3_cross(Vector3 vector, Vector3 other)
+{
+   return (Vector3){ .x = vector.y * other.z - vector.z * other.y,
+                     .y = vector.z * other.x - vector.x * other.z,
+                     .z = vector.x * other.y - vector.y * other.x };
+}
+
+inline float_t Vect3_dot(Vector3 V1, Vector3 V2)
+{
+   return V1.x * V2.x + V1.y * V2.y + V1.z * V2.z;
 }
 
 //

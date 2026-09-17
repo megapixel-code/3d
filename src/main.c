@@ -7,7 +7,7 @@ int main()
 {
    Vector3 v = { .x = 0, .y = 2, .z = 2 };
 
-   Vector3 out = Vect3_mult(v, 4);
+   Vector3 out = Vect3_reverse(v);
    Vect3_display(v);
    Vect3_display(out);
 }
