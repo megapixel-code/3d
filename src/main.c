@@ -1,13 +1,24 @@
-#include "position.h"
+#include "list.h"
 #include "vector.h"
 
+#include <stddef.h>
 #include <stdio.h>
 
 int main()
 {
-   Vector3 v = { .x = 0, .y = 2, .z = 2 };
+   int *list = L_init(sizeof(int));
 
-   Vector3 out = Vect3_reverse(v);
-   Vect3_display(v);
-   Vect3_display(out);
+   L_append(list, 4);
+   L_append(list, 4);
+   L_append(list, 4);
+   L_append(list, 4);
+   L_append(list, 4);
+   L_append(list, 4);
+   L_append(list, 4);
+   L_append(list, 8);
+   L_append(list, 4);
+
+   for ( size_t i = 0; i < L_len(list); i++ ) {
+      printf("%d, ", list[i]);
+   }
 }
