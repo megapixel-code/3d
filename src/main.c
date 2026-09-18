@@ -1,7 +1,7 @@
 #include "list.h"
 #include "matrix.h"
-#include "raylib.h"
 
+#include <raylib.h>
 #include <stddef.h>
 #include <stdio.h>
 
@@ -11,16 +11,18 @@ int main()
    InitWindow(100, 100, "test");
    printf("\n");
 
-   float **m = Mat_init(3);
+   float **m = Mat_init(4);
 
+   m[1][0] = -2;
    m[1][2] = 5;
+   m[2][2] = 5;
+   m[2][3] = -8;
+   Mat_print(m);
+   printf("\n");
 
-   for ( size_t y = 0; y < L_len(m); y++ ) {
-      for ( size_t x = 0; x < L_len(m); x++ ) {
-         printf("%f ", m[x][y]);
-      }
-      printf("\n");
-   }
+   Vector4 temp   = (Vector4){ .x = 4, .y = 31, .z = 1, .w = 3 };
+   Vector4 result = Mat4_mult(m, temp);
+   Vect4_print(result);
 
    Mat_free(m);
 
