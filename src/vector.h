@@ -1,7 +1,7 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
-#include "../external/raylib.h"
+#include "raylib.h"
 
 #include <math.h>
 #include <stdio.h>

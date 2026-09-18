@@ -19,6 +19,9 @@ out/:
 build/:
 	mkdir -p build
 
+build/main.o: src/main.c
+	$(CC) $(CFLAGS) -c -o $@ $<
+
 build/%.o: src/%.c src/%.h
 	$(CC) $(CFLAGS) -c -o $@ $<
 
