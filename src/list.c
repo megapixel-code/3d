@@ -1,18 +1,8 @@
 #include "list.h"
 
 #include <stddef.h>
+#include <stdio.h>
 #include <stdlib.h>
-
-void *L_init(size_t size)
-{
-   Header *header = malloc(sizeof(Header) + size);
-
-   header->cur_len    = 0;
-   header->max_size   = 1;
-   header->block_size = size;
-
-   return (void *)(header + 1);
-}
 
 void *L_ensure_index(void *list, size_t max_index)
 {

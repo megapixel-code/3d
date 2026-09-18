@@ -1,5 +1,6 @@
 CC := gcc
-CFLAGS := -Wall -Wextra
+CFLAGS := -Wall -Wextra # -O3
+
 MODULES := main \
            position \
            vector \
@@ -18,7 +19,7 @@ out/:
 build/:
 	mkdir -p build
 
-build/%.o: src/%.c
+build/%.o: src/%.c src/%.h
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 out/main: $(addprefix build/,$(addsuffix .o, $(MODULES)))

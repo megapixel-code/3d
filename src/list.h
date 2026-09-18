@@ -23,18 +23,25 @@ inline size_t WARN_UNUSED L_len(void *list)
    return header->cur_len;
 }
 
-void *WARN_UNUSED L_init(size_t size);
 void *WARN_UNUSED L_ensure_index(void *list, size_t max_index);
 
-#define L_append(list, data)                                         \
-   do {                                                              \
-      if ( list == NULL ) {                                          \
-         list = L_init(sizeof(*list));                               \
-      }                                                              \
-      Header *header        = L_get_header(list);                    \
-      list                  = L_ensure_index(list, header->cur_len); \
-      list[header->cur_len] = data;                                  \
-      header->cur_len++;                                             \
+#define L_append(list, data)                                             \
+   do {                                                                  \
+      if ( (list) == NULL ) {                                            \
+         Header *header = malloc(sizeof(Header) + sizeof(*(list)));      \
+                                                                         \
+         header->cur_len    = 0;                                         \
+         header->max_size   = 1;                                         \
+         header->block_size = sizeof(*(list));                           \
+                                                                         \
+         (list) = (void *)(header + 1);                                  \
+      }                                                                  \
+                                                                         \
+      Header *header          = L_get_header(list);                      \
+      (list)                  = L_ensure_index((list), header->cur_len); \
+      header                  = L_get_header(list);                      \
+      (list)[header->cur_len] = (data);                                  \
+      header->cur_len++;                                                 \
    } while ( 0 )
 
 #endif

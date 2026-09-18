@@ -6,19 +6,18 @@
 
 int main()
 {
+   SetTraceLogLevel(LOG_WARNING);
+   InitWindow(100, 100, "test");
+
    int *list = NULL;
 
-   L_append(list, 4);
-   L_append(list, 4);
-   L_append(list, 4);
-   L_append(list, 4);
-   L_append(list, 4);
-   L_append(list, 4);
-   L_append(list, 4);
-   L_append(list, 8);
-   L_append(list, 4);
+   for ( int i = 0; i < 100; i++ ) {
+      L_append(list, i);
+   }
 
    for ( size_t i = 0; i < L_len(list); i++ ) {
       printf("%d, ", list[i]);
    }
+
+   CloseWindow();
 }
