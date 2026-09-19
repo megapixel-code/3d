@@ -13,7 +13,12 @@
 float **WARN_UNUSED Mat_init(size_t size);
 void                Mat_free(float **matrix);
 void                Mat_print(float **matrix);
-Vector3             Mat3_vect_mult(float **matrix, Vector3 vect);
+float_t             Mat_det(float_t **matrix);
+
+//
+// =============== { Operator Overloading }
+//
+Vector3 Mat3_vect_mult(float **matrix, Vector3 vect);
 
 #define Mat4_mult(matrix, k)                \
    _Generic(k,                              \
@@ -22,6 +27,6 @@ Vector3             Mat3_vect_mult(float **matrix, Vector3 vect);
       default: Mat4_mult_scalar)(matrix, k)
 float **WARN_UNUSED   Mat4_mult_scalar(float **matrix, float_t k);
 float_t **WARN_UNUSED Mat4_mult_mat(float_t **matrix, float_t **other);
-Vector4               Mat4_mult_vect(float_t **matrix, Vector4 vector);
+Vector4 WARN_UNUSED   Mat4_mult_vect(float_t **matrix, Vector4 vector);
 
 #endif

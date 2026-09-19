@@ -1,17 +1,20 @@
 #include "matrix.h"
 
+#include "list.h"
+
 #include <math.h>
 #include <raylib.h>
 #include <stddef.h>
+#include <stdio.h>
 
 float_t **Mat_init(size_t size)
 {
    float_t **matrix = NULL;
-   L_ensure_index(matrix, size);
+   L_ensure_index(matrix, size - 1);
 
    for ( size_t y = 0; y < size; y++ ) {
       float_t *temp = NULL;
-      L_ensure_index(temp, size);
+      L_ensure_index(temp, size - 1);
 
       for ( size_t x = 0; x < size; x++ ) {
          L_append(temp, 0);
@@ -41,7 +44,84 @@ void Mat_print(float_t **matrix)
    }
 }
 
-Vector3 Mat3_vect_mult(float_t **matrix, Vector3 vect)
+float **Mat_sub_mat(float **matrix, size_t x, size_t y)
+{
+   float **out = NULL;
+   L_ensure_index(out, L_len(matrix) - 1);
+
+   for ( size_t cur_x = 0; cur_x < L_len(matrix); cur_x++ ) {
+      if ( cur_x == x ) {
+         continue;
+      }
+      float *col = NULL;
+      L_ensure_index(col, L_len(matrix[cur_x]) - 1);
+      L_append(out, col);
+      for ( size_t cur_y = 0; cur_y < L_len(matrix[cur_x]); cur_y++ ) {
+         if ( cur_y == y ) {
+            continue;
+         }
+         L_append(col, matrix[cur_x][cur_y]);
+      }
+   }
+
+   return out;
+}
+
+float_t Mat_det(float_t **matrix)
+{
+   size_t len = L_len(matrix);
+
+   switch ( len ) {
+      case 1: {
+         return matrix[0][0];
+      } break;
+      case 2: {
+         return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+      } break;
+      case 3: {
+         float_t result = 0;
+         float_t temp_pos;
+         float_t temp_neg;
+
+         for ( size_t x = 0; x < len; x++ ) {
+            temp_pos = 1;
+            temp_neg = 1;
+            for ( size_t y = 0; y < len; y++ ) {
+               temp_pos *= matrix[(x + y) % len][y];
+               temp_neg *= matrix[(len + x - y) % len][y];
+            }
+            result += temp_pos - temp_neg;
+         }
+
+         return result;
+      } break;
+      case 4: {
+         float_t result = 0;
+
+         float_t **mat_temp;
+
+         int sign = 1;
+         for ( size_t y = 0; y < L_len(matrix); y++ ) {
+            //
+            mat_temp = Mat_sub_mat(matrix, 0, y);
+            result  += sign * matrix[0][y] * Mat_det(mat_temp);
+            Mat_free(mat_temp);
+            sign *= -1;
+         }
+
+         return result;
+      } break;
+      default: {
+         fprintf(stderr,
+                 "Error: %s: cannot compute det of matrix size %zu\n",
+                 __func__,
+                 len);
+      } break;
+   }
+   return 0;
+}
+
+Vector3 Mat3_mult_vect(float_t **matrix, Vector3 vect)
 {
    assert(L_len(matrix) == 3);
 
