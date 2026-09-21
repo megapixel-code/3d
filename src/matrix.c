@@ -38,12 +38,19 @@ void Mat_print(float_t **matrix)
 {
    for ( size_t y = 0; y < L_len(matrix); y++ ) {
       for ( size_t x = 0; x < L_len(matrix[y]); x++ ) {
+         if ( matrix[x][y] >= 0 ) {
+            printf(" ");
+         }
          printf("%0.2f ", matrix[x][y]);
       }
       printf("\n");
    }
 }
 
+/* 0 1 2 |       |       |     |
+ * 3 4 5 | x = 0 | y = 0 | ==> | 4 5
+ * 6 7 8 |       |       |     | 7 8
+ * */
 float **Mat_sub_mat(float **matrix, size_t x, size_t y)
 {
    float **out = NULL;
@@ -98,14 +105,14 @@ float_t Mat_det(float_t **matrix)
       case 4: {
          float_t result = 0;
 
-         float_t **mat_temp;
+         float_t **sub_mat;
 
          int sign = 1;
          for ( size_t y = 0; y < L_len(matrix); y++ ) {
             //
-            mat_temp = Mat_sub_mat(matrix, 0, y);
-            result  += sign * matrix[0][y] * Mat_det(mat_temp);
-            Mat_free(mat_temp);
+            sub_mat = Mat_sub_mat(matrix, 0, y);
+            result += sign * matrix[0][y] * Mat_det(sub_mat);
+            Mat_free(sub_mat);
             sign *= -1;
          }
 
@@ -119,6 +126,32 @@ float_t Mat_det(float_t **matrix)
       } break;
    }
    return 0;
+}
+
+float_t **Mat_adjugate(float_t **matrix)
+{
+   float_t **result = Mat_init(L_len(matrix));
+
+   float_t **temp;
+   for ( size_t y = 0; y < L_len(matrix); y++ ) {
+      for ( size_t x = 0; x < L_len(matrix[y]); x++ ) {
+         temp         = Mat_sub_mat(matrix, y, x);
+         result[x][y] = pow(-1, x + y) * Mat_det(temp);
+         Mat_free(temp);
+      }
+   }
+
+   return result;
+}
+
+float_t **Mat_inverse(float_t **matrix)
+{
+   float_t **adjugate = Mat_adjugate(matrix);
+   float_t   det      = Mat_det(matrix);
+   float_t **result   = Mat4_mult(adjugate, 1 / det);
+   Mat_free(adjugate);
+
+   return result;
 }
 
 Vector3 Mat3_mult_vect(float_t **matrix, Vector3 vect)

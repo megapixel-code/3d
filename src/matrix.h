@@ -4,21 +4,17 @@
 #include "list.h"
 #include "vector.h"
 
-#include <assert.h>
-#include <math.h>
-#include <raylib.h>
-#include <stddef.h>
-#include <stdio.h>
-
-float **WARN_UNUSED Mat_init(size_t size);
-void                Mat_free(float **matrix);
-void                Mat_print(float **matrix);
-float_t             Mat_det(float_t **matrix);
+float **WARN_UNUSED   Mat_init(size_t size);
+void                  Mat_free(float **matrix);
+void                  Mat_print(float **matrix);
+float_t WARN_UNUSED   Mat_det(float_t **matrix);
+float_t **WARN_UNUSED Mat_adjugate(float_t **matrix);
+float_t **WARN_UNUSED Mat_inverse(float_t **matrix);
 
 //
 // =============== { Operator Overloading }
 //
-Vector3 Mat3_vect_mult(float **matrix, Vector3 vect);
+Vector3 WARN_UNUSED Mat3_vect_mult(float **matrix, Vector3 vect);
 
 #define Mat4_mult(matrix, k)                \
    _Generic(k,                              \
