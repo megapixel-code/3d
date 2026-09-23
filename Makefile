@@ -5,7 +5,10 @@ MODULES := main \
            position \
            vector \
            list \
-           matrix
+           matrix \
+           scene \
+           triangle \
+           object
 
 .PHONY = all clean
 all: build/ out/ out/main

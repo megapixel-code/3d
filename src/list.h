@@ -5,7 +5,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define WARN_UNUSED __attribute__((warn_unused_result))
+#define WARN_UNUSED  __attribute__((warn_unused_result))
+#define PROTECT(...) __VA_ARGS__
 
 typedef struct {
    size_t cur_len;
@@ -66,5 +67,6 @@ inline size_t WARN_UNUSED L_len(void *list)
    } while ( 0 )
 
 void L_free(void *list);
+void L_set_len(void *list, size_t len);
 
 #endif

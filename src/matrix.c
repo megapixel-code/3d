@@ -219,3 +219,69 @@ Vector4 Mat4_mult_vect(float_t **matrix, Vector4 vector)
                           matrix[2][3] * vector.z +
                           matrix[3][3] * vector.w };
 }
+
+float_t **Mat_get_model(Vector3 translation, double_t tetha)
+{
+   float_t **result = Mat_init(4);
+   for ( size_t i = 0; i < L_len(result); i++ ) {
+      result[i][i] = 1;
+   }
+
+   result[3][0] = translation.x;
+   result[3][1] = translation.y;
+   result[3][2] = translation.z;
+
+   result[0][0] = 1;
+   result[1][1] = cos(tetha);
+   result[2][2] = cos(tetha);
+   result[1][2] = sin(tetha);
+   result[2][1] = -sin(tetha);
+
+   return result;
+}
+
+float_t **Mat_get_projection(float_t l,
+                             float_t r,
+                             float_t t,
+                             float_t b,
+                             float_t n,
+                             float_t f)
+{
+   float_t **result = Mat_init(4);
+
+   result[0][0] = 2 / (r - l);
+   result[3][0] = -(r + l) / (r - l);
+
+   result[1][1] = 2 / (t - b);
+   result[3][1] = -(t + b) / (t - b);
+
+   result[2][2] = -2 / (f - n);
+   result[3][2] = -(f + n) / (f - n);
+
+   result[3][3] = 1;
+
+   return result;
+}
+
+float_t **Mat_get_viewport(float_t sx,
+                           float_t sy,
+                           float_t ws,
+                           float_t hs,
+                           float_t ns,
+                           float_t fs)
+{
+   float_t **result = Mat_init(4);
+
+   result[0][0] = ws / 2;
+   result[3][0] = sx + (ws / 2);
+
+   result[1][1] = hs / 2;
+   result[3][1] = sy + (hs / 2);
+
+   result[2][2] = (fs - ns) / 2;
+   result[3][2] = (ns + fs) / 2;
+
+   result[3][3] = 1;
+
+   return result;
+}

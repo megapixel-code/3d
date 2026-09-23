@@ -1,6 +1,8 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
+#include "position.h"
+
 #include <assert.h>
 #include <math.h>
 #include <raylib.h>
@@ -72,7 +74,7 @@ inline Vector3 Vect3_reverse(Vector3 vector)
    return Vect3_mult(vector, -1);
 }
 
-inline Vector4 Vect3_homogenous(Vector3 vector)
+inline Vector4 Vect3_homogenous(Position vector)
 {
    return (Vector4){ .x = vector.x, .y = vector.y, .z = vector.z, .w = 1 };
 }
@@ -85,11 +87,11 @@ void Vect3_print(Vector3 vector);
 // =========== { Vector4 }
 //
 
-inline Vector3 Vect4_cartesian(Vector4 vector)
+inline Position Vect4_cartesian(Vector4 vector)
 {
-   return (Vector3){ .x = vector.x / vector.w,
-                     .y = vector.y / vector.w,
-                     .z = vector.z / vector.w };
+   return (Position){ .x = vector.x / vector.w,
+                      .y = vector.y / vector.w,
+                      .z = vector.z / vector.w };
 }
 
 void Vect4_print(Vector4 vector);
