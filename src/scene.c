@@ -14,7 +14,7 @@
 void Scene_init(Scene *scene)
 {
    scene->projection = Mat_get_projection(-1, 1, 1, -1, 1, 100);
-   scene->viewport   = Mat_get_viewport(0, 0, 400, 400, 0, 1);
+   scene->viewport   = Mat_get_viewport(0, 0, 500, 500, 0, 1);
    scene->objects    = NULL;
 
    Object cube;
@@ -23,14 +23,22 @@ void Scene_init(Scene *scene)
    cube.verticies_screen = NULL;
    cube.triangles        = NULL;
 
-   L_append(cube.verticies, PROTECT((Position){ .x = 0, .y = 0, .z = 0 }));
-   L_append(cube.verticies, PROTECT((Position){ .x = 1, .y = 0, .z = 0 }));
-   L_append(cube.verticies, PROTECT((Position){ .x = 1, .y = 1, .z = 0 }));
-   L_append(cube.verticies, PROTECT((Position){ .x = 0, .y = 1, .z = 0 }));
-   L_append(cube.verticies, PROTECT((Position){ .x = 0, .y = 0, .z = 1 }));
-   L_append(cube.verticies, PROTECT((Position){ .x = 1, .y = 0, .z = 1 }));
-   L_append(cube.verticies, PROTECT((Position){ .x = 1, .y = 1, .z = 1 }));
-   L_append(cube.verticies, PROTECT((Position){ .x = 0, .y = 1, .z = 1 }));
+   L_append(cube.verticies,
+            PROTECT((Position){ .x = -0.5, .y = -0.5, .z = -0.5 }));
+   L_append(cube.verticies,
+            PROTECT((Position){ .x = 0.5, .y = -0.5, .z = -0.5 }));
+   L_append(cube.verticies,
+            PROTECT((Position){ .x = 0.5, .y = 0.5, .z = -0.5 }));
+   L_append(cube.verticies,
+            PROTECT((Position){ .x = -0.5, .y = 0.5, .z = -0.5 }));
+   L_append(cube.verticies,
+            PROTECT((Position){ .x = -0.5, .y = -0.5, .z = 0.5 }));
+   L_append(cube.verticies,
+            PROTECT((Position){ .x = 0.5, .y = -0.5, .z = 0.5 }));
+   L_append(cube.verticies,
+            PROTECT((Position){ .x = 0.5, .y = 0.5, .z = 0.5 }));
+   L_append(cube.verticies,
+            PROTECT((Position){ .x = -0.5, .y = 0.5, .z = 0.5 }));
 
    L_append(cube.triangles, Triangle_init(cube.verticies, (int[3]){ 0, 4, 5 }));
    L_append(cube.triangles, Triangle_init(cube.verticies, (int[3]){ 0, 5, 1 }));
