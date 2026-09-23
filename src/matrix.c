@@ -220,22 +220,58 @@ Vector4 Mat4_mult_vect(float_t **matrix, Vector4 vector)
                           matrix[3][3] * vector.w };
 }
 
-float_t **Mat_get_model(Vector3 translation, double_t tetha)
+float_t **
+Mat_get_model(Vector3 translation, double_t rx, double_t ry, double_t rz)
 {
    float_t **result = Mat_init(4);
    for ( size_t i = 0; i < L_len(result); i++ ) {
       result[i][i] = 1;
    }
-
    result[3][0] = translation.x;
    result[3][1] = translation.y;
    result[3][2] = translation.z;
 
-   result[0][0] = 1;
-   result[1][1] = cos(tetha);
-   result[2][2] = cos(tetha);
-   result[1][2] = sin(tetha);
-   result[2][1] = -sin(tetha);
+   float_t **temp;
+   if ( rx != 0 ) {
+      result[0][0] = 1;
+      result[1][1] = cos(rx);
+      result[2][2] = cos(rx);
+      result[1][2] = sin(rx);
+      result[2][1] = -sin(rx);
+
+      temp = Mat4_mult(
+         result,
+         Mat_get_model((Vector3){ .x = 0, .y = 0, .z = 0 }, 0, ry, rz));
+
+      Mat_free(result);
+      result = temp;
+   } else if ( ry != 0 ) {
+      result[0][0] = cos(ry);
+      result[2][2] = cos(ry);
+      result[1][1] = 1;
+      result[2][0] = sin(ry);
+      result[0][2] = -sin(ry);
+
+      temp = Mat4_mult(
+         result,
+         Mat_get_model((Vector3){ .x = 0, .y = 0, .z = 0 }, rx, 0, rz));
+
+      Mat_free(result);
+      result = temp;
+   } else if ( rz != 0 ) {
+      result[0][0] = cos(rz);
+      result[1][0] = -sin(rz);
+      result[0][1] = sin(rz);
+      result[1][1] = cos(rz);
+      result[2][2] = 1;
+
+      temp = Mat4_mult(
+         result,
+         Mat_get_model((Vector3){ .x = 0, .y = 0, .z = 0 }, rx, ry, 0));
+
+      Mat_free(result);
+      result = temp;
+   }
 
    return result;
 }

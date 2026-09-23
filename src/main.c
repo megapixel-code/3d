@@ -1,5 +1,6 @@
 #include "list.h"
 #include "matrix.h"
+#include "object.h"
 #include "scene.h"
 
 #include <math.h>
@@ -12,13 +13,26 @@ int main()
 {
    SetTraceLogLevel(LOG_WARNING);
    InitWindow(500, 500, "test");
+   SetTargetFPS(24);
    printf("\n");
 
    Scene scene;
    Scene_init(&scene);
 
-   Scene_draw(&scene);
-   sleep(1);
+   float_t i = 0;
+   while ( !WindowShouldClose() ) {
+      Mat_free(scene.objects[0].model);
+      scene.objects[0].model =
+         Mat_get_model((Vector3){ .x = 0, .y = 0, .z = 10 },
+                       i * (PI / 24),
+                       i * (PI / (24 * 2)),
+                       i * (PI / (24 * 3)));
+      i++;
+      Object_update_scaling(&scene.objects[0]);
+      Scene_apply_matrix(&scene);
+
+      Scene_draw(&scene);
+   }
 
    CloseWindow();
 }

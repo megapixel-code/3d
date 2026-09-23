@@ -25,7 +25,10 @@ float **WARN_UNUSED   Mat4_mult_scalar(float **matrix, float_t k);
 float_t **WARN_UNUSED Mat4_mult_mat(float_t **matrix, float_t **other);
 Vector4 WARN_UNUSED   Mat4_mult_vect(float_t **matrix, Vector4 vector);
 
-float_t **WARN_UNUSED Mat_get_model(Vector3 translation, double_t tetha);
+float_t **WARN_UNUSED Mat_get_model(Vector3  translation,
+                                    double_t rx,
+                                    double_t ry,
+                                    double_t rz);
 float_t **WARN_UNUSED Mat_get_projection(float_t l,
                                          float_t r,
                                          float_t t,

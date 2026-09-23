@@ -21,5 +21,6 @@ typedef struct {
 
 void Scene_init(Scene *scene);
 void Scene_draw(Scene *scene);
+void Scene_apply_matrix(Scene *scene);
 
 #endif
