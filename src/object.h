@@ -17,7 +17,7 @@ typedef struct {
    Triangle *triangles;
 } Object;
 
-Object Object_init(char *path);
+Object Object_init(char *object_name, float_t **model);
 void   Object_update_scaling(Object *o);
 
 #endif

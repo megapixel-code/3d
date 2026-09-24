@@ -1,13 +1,15 @@
 #include "object.h"
 
 #include "list.h"
+#include "matrix.h"
 #include "string.h"
 
+#include <math.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <strings.h>
 
-Object Object_init(char *object_name)
+Object Object_init(char *object_name, float_t **model)
 {
    char *pre_path  = "assets/";
    char *post_path = ".obj";
@@ -22,6 +24,7 @@ Object Object_init(char *object_name)
       .verticies_scaled = NULL,
       .verticies_screen = NULL,
       .triangles        = NULL,
+      .model            = model,
    };
 
    FILE *f = fopen(path, "r");

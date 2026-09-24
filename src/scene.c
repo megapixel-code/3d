@@ -14,57 +14,26 @@
 
 void Scene_init(Scene *scene)
 {
-   scene->projection = Mat_get_projection(-1, 1, 1, -1, 1, 100);
-   scene->viewport   = Mat_get_viewport(100, 100, 100, 100, 0, 100);
+   scene->projection = Mat_get_projection(-7, 7, 7, -7, 0, 10);
+   scene->viewport   = Mat_get_viewport(0, 0, 500, 500, 0.1, 500);
    scene->objects    = NULL;
 
-   // Object cube;
-   // cube.verticies        = NULL;
-   // cube.verticies_scaled = NULL;
-   // cube.verticies_screen = NULL;
-   // cube.triangles        = NULL;
-   //
-   // L_append(cube.verticies,
-   //          PROTECT((Position){ .x = -0.5, .y = -0.5, .z = -0.5 }));
-   // L_append(cube.verticies,
-   //          PROTECT((Position){ .x = 0.5, .y = -0.5, .z = -0.5 }));
-   // L_append(cube.verticies,
-   //          PROTECT((Position){ .x = 0.5, .y = 0.5, .z = -0.5 }));
-   // L_append(cube.verticies,
-   //          PROTECT((Position){ .x = -0.5, .y = 0.5, .z = -0.5 }));
-   // L_append(cube.verticies,
-   //          PROTECT((Position){ .x = -0.5, .y = -0.5, .z = 0.5 }));
-   // L_append(cube.verticies,
-   //          PROTECT((Position){ .x = 0.5, .y = -0.5, .z = 0.5 }));
-   // L_append(cube.verticies,
-   //          PROTECT((Position){ .x = 0.5, .y = 0.5, .z = 0.5 }));
-   // L_append(cube.verticies,
-   //          PROTECT((Position){ .x = -0.5, .y = 0.5, .z = 0.5 }));
-   //
-   // L_append(cube.triangles, Triangle_init(cube.verticies, (int[3]){ 0, 4, 5
-   // })); L_append(cube.triangles, Triangle_init(cube.verticies, (int[3]){ 0,
-   // 5, 1 })); L_append(cube.triangles, Triangle_init(cube.verticies, (int[3]){
-   // 1, 5, 6 })); L_append(cube.triangles, Triangle_init(cube.verticies,
-   // (int[3]){ 1, 6, 2 })); L_append(cube.triangles,
-   // Triangle_init(cube.verticies, (int[3]){ 2, 6, 7 }));
-   // L_append(cube.triangles, Triangle_init(cube.verticies, (int[3]){ 2, 7, 3
-   // })); L_append(cube.triangles, Triangle_init(cube.verticies, (int[3]){ 3,
-   // 7, 4 })); L_append(cube.triangles, Triangle_init(cube.verticies, (int[3]){
-   // 3, 4, 0 })); L_append(cube.triangles, Triangle_init(cube.verticies,
-   // (int[3]){ 1, 2, 3 })); L_append(cube.triangles,
-   // Triangle_init(cube.verticies, (int[3]){ 1, 3, 0 }));
-   // L_append(cube.triangles, Triangle_init(cube.verticies, (int[3]){ 4, 6, 5
-   // })); L_append(cube.triangles, Triangle_init(cube.verticies, (int[3]){ 4,
-   // 7, 6 }));
-   //
-   // cube.model = Mat_get_model((Vector3){ .x = 0, .y = 0, .z = 10 }, 0, 0, 0);
-   // Object_update_scaling(&cube);
+   Object plane = Object_init(
+      "plane",
+      Mat_get_model((Vector3){ .x = -4, .y = 0, .z = 100 }, 0, 0, 0));
+   Object_update_scaling(&plane);
+   L_append(scene->objects, plane);
 
-   Object object = Object_init("cube");
-   object.model  = Mat_get_model((Vector3){ .x = 0, .y = 0, .z = 0 }, 0, 0, 0);
-   Object_update_scaling(&object);
-
-   L_append(scene->objects, object);
+   Object cube =
+      Object_init("cube",
+                  Mat_get_model((Vector3){ .x = 0, .y = 0, .z = 0 }, 1, 1, 0));
+   Object_update_scaling(&cube);
+   L_append(scene->objects, cube);
+   Object cube2 =
+      Object_init("cube",
+                  Mat_get_model((Vector3){ .x = 4, .y = 0, .z = 12 }, 1, 1, 0));
+   Object_update_scaling(&cube2);
+   L_append(scene->objects, cube2);
 }
 
 void Scene_apply_matrix(Scene *scene)
