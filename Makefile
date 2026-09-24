@@ -8,7 +8,8 @@ MODULES := main \
            matrix \
            scene \
            triangle \
-           object
+           object \
+           string
 
 .PHONY = all clean
 all: build/ out/ out/main

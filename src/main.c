@@ -21,9 +21,14 @@ int main()
 
    float_t i = 0;
    while ( !WindowShouldClose() ) {
+      if ( IsKeyPressed(KEY_Q) ) {
+         CloseWindow();
+         exit(0);
+      }
+
       Mat_free(scene.objects[0].model);
       scene.objects[0].model =
-         Mat_get_model((Vector3){ .x = 0, .y = 0, .z = 10 },
+         Mat_get_model((Vector3){ .x = 0, .y = 0, .z = -100 },
                        i * (PI / 24),
                        i * (PI / (24 * 2)),
                        i * (PI / (24 * 3)));

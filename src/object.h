@@ -3,7 +3,11 @@
 
 #include "list.h"
 #include "matrix.h"
+#include "string.h"
 #include "triangle.h"
+
+#include <stdio.h>
+#include <string.h>
 
 typedef struct {
    Position *verticies;
@@ -13,6 +17,7 @@ typedef struct {
    Triangle *triangles;
 } Object;
 
-void Object_update_scaling(Object *o);
+Object Object_init(char *path);
+void   Object_update_scaling(Object *o);
 
 #endif
