@@ -20,11 +20,12 @@ Object Object_init(char *object_name, float_t **model)
    strcat(path, post_path);
 
    Object result = {
-      .verticies        = NULL,
-      .verticies_scaled = NULL,
-      .verticies_screen = NULL,
-      .triangles        = NULL,
-      .model            = model,
+      .verticies                      = NULL,
+      .verticies_scaled               = NULL,
+      .verticies_screen               = NULL,
+      .index_verticies_outside_render = NULL,
+      .triangles                      = NULL,
+      .model                          = model,
    };
 
    FILE *f = fopen(path, "r");

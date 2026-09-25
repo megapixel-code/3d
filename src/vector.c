@@ -17,7 +17,7 @@ void Vect3_print(Vector3 vector)
 
 void Vect4_print(Vector4 vector)
 {
-   printf("vect3 = {.x = %.5f, .y = %.5f, .z = %.5f, .w = %.5f}\n",
+   printf("vect4 = {.x = %.5f, .y = %.5f, .z = %.5f, .w = %.5f}\n",
           vector.x,
           vector.y,
           vector.z,

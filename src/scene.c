@@ -42,6 +42,8 @@ void Scene_apply_matrix(Scene *scene)
 
    for ( size_t object_n = 0; object_n < L_len(scene->objects); object_n++ ) {
       L_set_len(scene->objects[object_n].verticies_screen, 0);
+      L_set_len(scene->objects[object_n].index_verticies_outside_render, 0);
+
       for ( size_t vertice_n = 0;
             vertice_n < L_len(scene->objects[object_n].verticies_scaled);
             vertice_n++ ) {
@@ -49,6 +51,12 @@ void Scene_apply_matrix(Scene *scene)
             scene->objects[object_n].verticies_scaled[vertice_n]);
 
          temp = Mat4_mult(scene->projection, temp);
+         if ( (temp.x < -1 || temp.x > 1) ||
+              (temp.y < -1 || temp.y > 1) ||
+              (temp.z < -1 || temp.z > 1) ) {
+            L_append(scene->objects[object_n].index_verticies_outside_render,
+                     vertice_n);
+         }
          temp = Mat4_mult(scene->viewport, temp);
 
          L_append(scene->objects[object_n].verticies_screen,
@@ -57,52 +65,36 @@ void Scene_apply_matrix(Scene *scene)
    }
 }
 
+/* this will set the should_render boolean on every triangle
+ * */
 void Triangle_filter(Scene *scene)
 {
-   float_t **inverse_viewport = Mat_inverse(scene->viewport);
-   size_t   *verticies_outside_render;
+   Object cur_object;
 
-   Position pos_pre_viewport;
    for ( size_t object_n = 0; object_n < L_len(scene->objects); object_n++ ) {
-      verticies_outside_render = NULL;
-
-      for ( size_t i = 0; i < L_len(scene->objects[object_n].verticies_screen);
-            i++ ) {
-         pos_pre_viewport = Vect4_cartesian(Mat4_mult(
-            inverse_viewport,
-            Vect3_homogenous(scene->objects[object_n].verticies_screen[i])));
-         if ( (pos_pre_viewport.x < -1 || pos_pre_viewport.x > 1) ||
-              (pos_pre_viewport.y < -1 || pos_pre_viewport.y > 1) ||
-              (pos_pre_viewport.z < -1 || pos_pre_viewport.z > 1) ) {
-            L_append(verticies_outside_render, i);
-         }
-      }
-
       for ( size_t triangle_n = 0;
             triangle_n < L_len(scene->objects[object_n].triangles);
             triangle_n++ ) {
          scene->objects[object_n].triangles[triangle_n].should_render = true;
       }
 
-      for ( size_t i = 0; i < L_len(verticies_outside_render); i++ ) {
-         for ( size_t triangle_n = 0;
-               triangle_n < L_len(scene->objects[object_n].triangles);
+      for ( size_t i = 0;
+            i < L_len(scene->objects[object_n].index_verticies_outside_render);
+            i++ ) {
+         cur_object = scene->objects[object_n];
+         for ( size_t triangle_n = 0; triangle_n < L_len(cur_object.triangles);
                triangle_n++ ) {
             for ( size_t face_n = 0; face_n < 3; face_n++ ) {
-               if ( scene->objects[object_n]
-                       .triangles[triangle_n]
-                       .faces[face_n] == verticies_outside_render[i] ) {
-                  scene->objects[object_n].triangles[triangle_n].should_render =
-                     false;
-                  break;
+               if ( cur_object.triangles[triangle_n].faces[face_n] !=
+                    cur_object.index_verticies_outside_render[i] ) {
+                  continue;
                }
+               cur_object.triangles[triangle_n].should_render = false;
+               break;
             }
          }
       }
-      L_free(verticies_outside_render);
    }
-
-   Mat_free(inverse_viewport);
 }
 
 void Scene_draw(Scene *scene)

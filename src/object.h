@@ -13,6 +13,7 @@ typedef struct {
    Position *verticies;
    Position *verticies_scaled;
    Position *verticies_screen;
+   size_t   *index_verticies_outside_render;
    float_t **model;
    Triangle *triangles;
 } Object;
