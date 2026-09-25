@@ -14,13 +14,13 @@
 
 void Scene_init(Scene *scene)
 {
-   scene->projection = Mat_get_projection(-7, 7, 7, -7, 0, 10);
+   scene->projection = Mat_get_projection(-7, 7, -7, 7, -10, 10);
    scene->viewport   = Mat_get_viewport(0, 0, 500, 500, 0.1, 500);
    scene->objects    = NULL;
 
    Object plane = Object_init(
       "plane",
-      Mat_get_model((Vector3){ .x = -4, .y = 0, .z = 100 }, 0, 0, 0));
+      Mat_get_model((Vector3){ .x = -4, .y = 0, .z = -9 }, 0, 0, 0));
    Object_update_scaling(&plane);
    L_append(scene->objects, plane);
 
@@ -31,7 +31,7 @@ void Scene_init(Scene *scene)
    L_append(scene->objects, cube);
    Object cube2 =
       Object_init("cube",
-                  Mat_get_model((Vector3){ .x = 4, .y = 0, .z = 12 }, 1, 1, 0));
+                  Mat_get_model((Vector3){ .x = 4, .y = 0, .z = 50 }, 1, 1, 0));
    Object_update_scaling(&cube2);
    L_append(scene->objects, cube2);
 }
@@ -57,8 +57,58 @@ void Scene_apply_matrix(Scene *scene)
    }
 }
 
+void Triangle_filter(Scene *scene)
+{
+   float_t **inverse_viewport = Mat_inverse(scene->viewport);
+   size_t   *verticies_outside_render;
+
+   Position pos_pre_viewport;
+   for ( size_t object_n = 0; object_n < L_len(scene->objects); object_n++ ) {
+      verticies_outside_render = NULL;
+
+      for ( size_t i = 0; i < L_len(scene->objects[object_n].verticies_screen);
+            i++ ) {
+         pos_pre_viewport = Vect4_cartesian(Mat4_mult(
+            inverse_viewport,
+            Vect3_homogenous(scene->objects[object_n].verticies_screen[i])));
+         if ( (pos_pre_viewport.x < -1 || pos_pre_viewport.x > 1) ||
+              (pos_pre_viewport.y < -1 || pos_pre_viewport.y > 1) ||
+              (pos_pre_viewport.z < -1 || pos_pre_viewport.z > 1) ) {
+            L_append(verticies_outside_render, i);
+         }
+      }
+
+      for ( size_t triangle_n = 0;
+            triangle_n < L_len(scene->objects[object_n].triangles);
+            triangle_n++ ) {
+         scene->objects[object_n].triangles[triangle_n].should_render = true;
+      }
+
+      for ( size_t i = 0; i < L_len(verticies_outside_render); i++ ) {
+         for ( size_t triangle_n = 0;
+               triangle_n < L_len(scene->objects[object_n].triangles);
+               triangle_n++ ) {
+            for ( size_t face_n = 0; face_n < 3; face_n++ ) {
+               if ( scene->objects[object_n]
+                       .triangles[triangle_n]
+                       .faces[face_n] == verticies_outside_render[i] ) {
+                  scene->objects[object_n].triangles[triangle_n].should_render =
+                     false;
+                  break;
+               }
+            }
+         }
+      }
+      L_free(verticies_outside_render);
+   }
+
+   Mat_free(inverse_viewport);
+}
+
 void Scene_draw(Scene *scene)
 {
+   Triangle_filter(scene);
+
    BeginDrawing();
    ClearBackground(WHITE);
    Scene_apply_matrix(scene);
@@ -71,6 +121,9 @@ void Scene_draw(Scene *scene)
       for ( size_t triangle_n = 0; triangle_n < L_len(cur_object.triangles);
             triangle_n++ ) {
          cur_triangle = cur_object.triangles[triangle_n];
+         if ( !cur_triangle.should_render ) {
+            continue;
+         }
 
          DrawLine(cur_object.verticies_screen[cur_triangle.faces[0]].x,
                   cur_object.verticies_screen[cur_triangle.faces[0]].y,

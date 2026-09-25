@@ -2,6 +2,7 @@
 
 void L_free(void *list)
 {
+   L_ensure_init(list);
    Header *header = L_get_header(list);
    free(header);
 }

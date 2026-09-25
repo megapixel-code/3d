@@ -19,12 +19,6 @@ inline Header WARN_UNUSED *L_get_header(void *list)
    return ((Header *)list) - 1;
 }
 
-inline size_t WARN_UNUSED L_len(void *list)
-{
-   Header *header = L_get_header(list);
-   return header->cur_len;
-}
-
 #define L_ensure_init(list)                                         \
    do {                                                             \
       if ( (list) == NULL ) {                                       \
@@ -54,6 +48,15 @@ inline size_t WARN_UNUSED L_len(void *list)
                                                                             \
       list = (void *)(header + 1);                                          \
    } while ( 0 )
+
+inline size_t WARN_UNUSED L_len(void *list)
+{
+   if ( list == NULL ) {
+      return 0;
+   }
+   Header *header = L_get_header(list);
+   return header->cur_len;
+}
 
 #define L_append(list, data)                        \
    do {                                             \

@@ -10,7 +10,8 @@
 
 typedef struct {
    Position *vertices; // array of all vertex coordinates
-   int faces[3]; // array of indexes of vertices in counter-clockwise order
+   int  faces[3]; // array of indexes of vertices in counter-clockwise order
+   bool should_render;
 } Triangle;
 
 Triangle WARN_UNUSED Triangle_init(Position *verticies, int faces[3]);
