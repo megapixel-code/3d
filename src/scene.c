@@ -18,22 +18,23 @@ void Scene_init(Scene *scene)
    scene->viewport   = Mat_get_viewport(0, 0, 500, 500, 0.1, 500);
    scene->objects    = NULL;
 
+   Object cube =
+      Object_init("cube",
+                  Mat_get_model((Vector3){ .x = 4, .y = 0, .z = 50 }, 1, 1, 0));
+   Object_update_scaling(&cube);
+   L_append(scene->objects, cube);
+
    Object plane = Object_init(
       "plane",
       Mat_get_model((Vector3){ .x = -4, .y = 0, .z = -9 }, 0, 0, 0));
    Object_update_scaling(&plane);
    L_append(scene->objects, plane);
 
-   Object cube =
+   cube =
       Object_init("cube",
                   Mat_get_model((Vector3){ .x = 0, .y = 0, .z = 0 }, 1, 1, 0));
    Object_update_scaling(&cube);
    L_append(scene->objects, cube);
-   Object cube2 =
-      Object_init("cube",
-                  Mat_get_model((Vector3){ .x = 4, .y = 0, .z = 50 }, 1, 1, 0));
-   Object_update_scaling(&cube2);
-   L_append(scene->objects, cube2);
 }
 
 void Scene_apply_matrix(Scene *scene)
