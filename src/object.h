@@ -23,5 +23,9 @@ typedef struct {
 Object Object_init(char *object_name, Position p, Rotation r);
 void   Object_reset_model(Object *o);
 void   Object_set_rotation_matrix(Object *o, Rotation r);
+void   Object_set_rotation_euler(Object *o,
+                                 float_t yaw,
+                                 float_t pitch,
+                                 float_t roll);
 
 #endif

@@ -18,15 +18,15 @@ void Scene_init(Scene *scene)
    scene->viewport   = Mat_get_viewport(0, 0, 500, 500, 0.1, 500);
    scene->objects    = NULL;
 
-   Object plane = Object_init("plane",
-                              (Position){ .x = -4, .y = 0, .z = 0 },
-                              (Rotation){ 0, 0, 0 });
-   L_append(scene->objects, plane);
-
    Object cube = Object_init("cube",
-                             (Position){ .x = 0, .y = 0, .z = 8.7 },
+                             (Position){ .x = -4, .y = 0, .z = 8.7 },
                              (Rotation){ 1, 1, 0 });
    L_append(scene->objects, cube);
+
+   Object plane = Object_init("plane",
+                              (Position){ .x = 0, .y = 0, .z = 0 },
+                              (Rotation){ 0, 0, 0 });
+   L_append(scene->objects, plane);
 
    cube = Object_init("cube",
                       (Position){ .x = 4, .y = 0, .z = 0 },

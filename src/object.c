@@ -135,3 +135,24 @@ void Object_set_rotation_matrix(Object *o, Rotation r)
 
    Mat_free(temp_model);
 }
+
+void Object_set_rotation_euler(Object *o,
+                               float_t yaw,
+                               float_t pitch,
+                               float_t roll)
+{
+   float_t **model_yaw =
+      Mat_get_model((Vector3){ 0, 0, 0 },
+                    (Rotation){ .rx = 0, .ry = 0, .rz = yaw });
+   Position *pos_yaw = Mat4_mult(model_yaw, o->verticies);
+   Mat_free(model_yaw);
+
+   L_free(o->verticies_scaled);
+   float_t **model_translation = Mat_get_model(
+      (Vector3){ .x = o->position.x, .y = o->position.y, .z = o->position.z },
+      (Rotation){ 0, 0, 0 });
+   o->verticies_scaled = Mat4_mult(model_translation, pos_yaw);
+
+   Mat_free(model_translation);
+   L_free(pos_yaw);
+}
