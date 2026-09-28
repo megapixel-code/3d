@@ -5,18 +5,19 @@
 #include "string.h"
 
 #include <math.h>
+#include <raylib.h>
 #include <stddef.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <strings.h>
 
-Object Object_init(char *object_name, float_t **model)
+Object Object_parse_file(char *name)
 {
    char *pre_path  = "assets/";
    char *post_path = ".obj";
-   char *path =
-      malloc(strlen(pre_path) + strlen(object_name) + strlen(post_path) + 1);
+   char *path = malloc(strlen(pre_path) + strlen(name) + strlen(post_path) + 1);
    strcpy(path, pre_path);
-   strcat(path, object_name);
+   strcat(path, name);
    strcat(path, post_path);
 
    Object result = {
@@ -24,8 +25,8 @@ Object Object_init(char *object_name, float_t **model)
       .verticies_scaled               = NULL,
       .verticies_screen               = NULL,
       .index_verticies_outside_render = NULL,
+      .model                          = NULL,
       .triangles                      = NULL,
-      .model                          = model,
    };
 
    FILE *f = fopen(path, "r");
@@ -96,13 +97,41 @@ Object Object_init(char *object_name, float_t **model)
    return result;
 }
 
-void Object_update_scaling(Object *o)
+Object Object_init(char *object_name, Position p, Rotation r)
 {
-   Vector4 temp;
+   Object result = Object_parse_file(object_name);
 
-   L_set_len(o->verticies_scaled, 0);
-   for ( size_t i = 0; i < L_len(o->verticies); i++ ) {
-      temp = Mat4_mult(o->model, Vect3_homogenous(o->verticies[i]));
-      L_append(o->verticies_scaled, Vect4_cartesian(temp));
-   }
+   result.position = p;
+   result.rotation = r;
+   result.model    = NULL;
+   Object_reset_model(&result);
+
+   return result;
+}
+
+void Object_apply_model(Object *o)
+{
+   L_free(o->verticies_scaled);
+   o->verticies_scaled = Mat4_mult(o->model, o->verticies);
+}
+
+void Object_reset_model(Object *o)
+{
+   Mat_free(o->model);
+   o->model = Mat_get_model(
+      (Vector3){ .x = o->position.x, .y = o->position.y, .z = o->position.z },
+      o->rotation);
+   Object_apply_model(o);
+}
+
+void Object_set_rotation_matrix(Object *o, Rotation r)
+{
+   float_t **temp_model = Mat_get_model(
+      (Vector3){ .x = o->position.x, .y = o->position.y, .z = o->position.z },
+      r);
+
+   L_free(o->verticies_scaled);
+   o->verticies_scaled = Mat4_mult(temp_model, o->verticies);
+
+   Mat_free(temp_model);
 }

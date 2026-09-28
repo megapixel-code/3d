@@ -10,6 +10,8 @@
 #include <string.h>
 
 typedef struct {
+   Position  position;
+   Rotation  rotation;
    Position *verticies;
    Position *verticies_scaled;
    Position *verticies_screen;
@@ -18,7 +20,8 @@ typedef struct {
    Triangle *triangles;
 } Object;
 
-Object Object_init(char *object_name, float_t **model);
-void   Object_update_scaling(Object *o);
+Object Object_init(char *object_name, Position p, Rotation r);
+void   Object_reset_model(Object *o);
+void   Object_set_rotation_matrix(Object *o, Rotation r);
 
 #endif

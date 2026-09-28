@@ -20,15 +20,14 @@ Vector3 WARN_UNUSED Mat3_vect_mult(float **matrix, Vector3 vect);
    _Generic(k,                              \
       Vector4: Mat4_mult_vect,              \
       float_t * *: Mat4_mult_mat,           \
+      Position *: Mat4_mult_list_Position,  \
       default: Mat4_mult_scalar)(matrix, k)
 float **WARN_UNUSED   Mat4_mult_scalar(float **matrix, float_t k);
 float_t **WARN_UNUSED Mat4_mult_mat(float_t **matrix, float_t **other);
 Vector4 WARN_UNUSED   Mat4_mult_vect(float_t **matrix, Vector4 vector);
+Position *WARN_UNUSED Mat4_mult_list_Position(float_t **matrix, Position *list);
 
-float_t **WARN_UNUSED Mat_get_model(Vector3  translation,
-                                    double_t rx,
-                                    double_t ry,
-                                    double_t rz);
+float_t             **Mat_get_model(Vector3 translation, Rotation r);
 float_t **WARN_UNUSED Mat_get_projection(float_t l,
                                          float_t r,
                                          float_t t,

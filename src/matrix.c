@@ -1,6 +1,7 @@
 #include "matrix.h"
 
 #include "list.h"
+#include "position.h"
 
 #include <math.h>
 #include <raylib.h>
@@ -28,6 +29,10 @@ float_t **Mat_init(size_t size)
 
 void Mat_free(float_t **matrix)
 {
+   if ( matrix == NULL ) {
+      return;
+   }
+
    for ( size_t i = 0; i < L_len(matrix); i++ ) {
       L_free(matrix[i]);
    }
@@ -220,8 +225,20 @@ Vector4 Mat4_mult_vect(float_t **matrix, Vector4 vector)
                           matrix[3][3] * vector.w };
 }
 
-float_t **
-Mat_get_model(Vector3 translation, double_t rx, double_t ry, double_t rz)
+Position *Mat4_mult_list_Position(float_t **matrix, Position *list)
+{
+   Position *result = NULL;
+
+   Vector4 temp;
+   for ( size_t i = 0; i < L_len(list); i++ ) {
+      temp = Mat4_mult(matrix, Vect3_homogenous(list[i]));
+      L_append(result, Vect4_cartesian(temp));
+   }
+
+   return result;
+}
+
+float_t **Mat_get_model(Vector3 translation, Rotation r)
 {
    float_t **result = Mat_init(4);
    for ( size_t i = 0; i < L_len(result); i++ ) {
@@ -232,42 +249,45 @@ Mat_get_model(Vector3 translation, double_t rx, double_t ry, double_t rz)
    result[3][2] = translation.z;
 
    float_t **temp;
-   if ( rx != 0 ) {
+   if ( r.rx != 0 ) {
       result[0][0] = 1;
-      result[1][1] = cos(rx);
-      result[2][2] = cos(rx);
-      result[1][2] = sin(rx);
-      result[2][1] = -sin(rx);
+      result[1][1] = cos(r.rx);
+      result[2][2] = cos(r.rx);
+      result[1][2] = sin(r.rx);
+      result[2][1] = -sin(r.rx);
 
       temp = Mat4_mult(
          result,
-         Mat_get_model((Vector3){ .x = 0, .y = 0, .z = 0 }, 0, ry, rz));
+         Mat_get_model((Vector3){ .x = 0, .y = 0, .z = 0 },
+                       (Rotation){ .rx = 0, .ry = r.ry, .rz = r.rz }));
 
       Mat_free(result);
       result = temp;
-   } else if ( ry != 0 ) {
-      result[0][0] = cos(ry);
-      result[2][2] = cos(ry);
+   } else if ( r.ry != 0 ) {
+      result[0][0] = cos(r.ry);
+      result[2][2] = cos(r.ry);
       result[1][1] = 1;
-      result[2][0] = sin(ry);
-      result[0][2] = -sin(ry);
+      result[2][0] = sin(r.ry);
+      result[0][2] = -sin(r.ry);
 
       temp = Mat4_mult(
          result,
-         Mat_get_model((Vector3){ .x = 0, .y = 0, .z = 0 }, rx, 0, rz));
+         Mat_get_model((Vector3){ .x = 0, .y = 0, .z = 0 },
+                       (Rotation){ .rx = r.rx, .ry = 0, .rz = r.rz }));
 
       Mat_free(result);
       result = temp;
-   } else if ( rz != 0 ) {
-      result[0][0] = cos(rz);
-      result[1][0] = -sin(rz);
-      result[0][1] = sin(rz);
-      result[1][1] = cos(rz);
+   } else if ( r.rz != 0 ) {
+      result[0][0] = cos(r.rz);
+      result[1][0] = -sin(r.rz);
+      result[0][1] = sin(r.rz);
+      result[1][1] = cos(r.rz);
       result[2][2] = 1;
 
       temp = Mat4_mult(
          result,
-         Mat_get_model((Vector3){ .x = 0, .y = 0, .z = 0 }, rx, ry, 0));
+         Mat_get_model((Vector3){ .x = 0, .y = 0, .z = 0 },
+                       (Rotation){ .rx = r.rx, .ry = r.ry, .rz = 0 }));
 
       Mat_free(result);
       result = temp;

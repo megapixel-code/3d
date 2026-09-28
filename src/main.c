@@ -1,4 +1,3 @@
-#include "matrix.h"
 #include "object.h"
 #include "scene.h"
 
@@ -23,21 +22,10 @@ int main()
          exit(0);
       }
 
-      Mat_free(scene.objects[0].model);
-      scene.objects[0].model =
-         Mat_get_model((Vector3){ .x = 4, .y = 0, .z = 9 },
-                       i * (PI / (24 * 1)),
-                       i * (PI / (24 * 2)),
-                       i * (PI / (24 * 4)));
-      Mat_free(scene.objects[1].model);
-      scene.objects[1].model =
-         Mat_get_model((Vector3){ .x = -4, .y = 0, .z = 0 },
-                       i * (PI / (24 * 1)),
-                       i * (PI / (24 * 2)),
-                       i * (PI / (24 * 4)));
+      Object_set_rotation_matrix(
+         &scene.objects[0],
+         (Rotation){ .rx = i * 0.02, .ry = i * 0.01, .rz = i * 0.01 });
       i++;
-      Object_update_scaling(&scene.objects[0]);
-      Object_update_scaling(&scene.objects[1]);
 
       Scene_apply_matrix(&scene);
       Scene_draw(&scene);
