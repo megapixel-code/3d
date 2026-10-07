@@ -13,10 +13,14 @@
 #include <stddef.h>
 #include <stdio.h>
 
+#define DISPLAY_MODE_NONE            0
+#define DISPLAY_MODE_ANIMATION_EULER 1
+
 typedef struct {
    float_t **projection;
    float_t **viewport;
    Object   *objects;
+   int       display_mode;
 } Scene;
 
 void Scene_init(Scene *scene);

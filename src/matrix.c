@@ -2,6 +2,7 @@
 
 #include "list.h"
 #include "position.h"
+#include "vector.h"
 
 #include <math.h>
 #include <raylib.h>
@@ -292,6 +293,32 @@ float_t **Mat_get_model(Vector3 translation, Rotation r)
       Mat_free(result);
       result = temp;
    }
+
+   return result;
+}
+
+float_t **Mat_get_model_axis_rot(Vector3 axis, float_t rotation)
+{
+   Vector3 n     = Vect3_normalize(axis);
+   float_t tetha = rotation;
+   float_t c     = cos(tetha);
+   float_t s     = sin(tetha);
+
+   float_t **result = Mat_init(4);
+
+   result[0][0] = pow(n.x, 2) * (1 - c) + c;
+   result[1][1] = pow(n.y, 2) * (1 - c) + c;
+   result[2][2] = pow(n.z, 2) * (1 - c) + c;
+   result[3][3] = 1;
+
+   result[1][0] = n.x * n.y * (1 - c) + n.z * s;
+   result[0][1] = n.x * n.y * (1 - c) - n.z * s;
+
+   result[2][0] = n.x * n.z * (1 - c) - n.y * s;
+   result[0][2] = n.x * n.z * (1 - c) + n.y * s;
+
+   result[2][1] = n.y * n.z * (1 - c) + n.x * s;
+   result[1][2] = n.y * n.z * (1 - c) - n.x * s;
 
    return result;
 }

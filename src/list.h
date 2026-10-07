@@ -69,7 +69,17 @@ inline size_t WARN_UNUSED L_len(void *list)
       header->cur_len++;                            \
    } while ( 0 )
 
+#define L_copy(list, output)                    \
+   do {                                         \
+      output = NULL;                            \
+      L_set_len(output, L_len(list));           \
+      for ( int i = 0; i < L_len(list); i++ ) { \
+         L_append(output, list[i]);             \
+      }                                         \
+   } while ( 0 )
+
 void L_free(void *list);
 void L_set_len(void *list, size_t len);
+void L_print_f(void *list);
 
 #endif

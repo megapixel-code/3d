@@ -27,7 +27,8 @@ float_t **WARN_UNUSED Mat4_mult_mat(float_t **matrix, float_t **other);
 Vector4 WARN_UNUSED   Mat4_mult_vect(float_t **matrix, Vector4 vector);
 Position *WARN_UNUSED Mat4_mult_list_Position(float_t **matrix, Position *list);
 
-float_t             **Mat_get_model(Vector3 translation, Rotation r);
+float_t **WARN_UNUSED Mat_get_model(Vector3 translation, Rotation r);
+float_t **WARN_UNUSED Mat_get_model_axis_rot(Vector3 axis, float_t rotation);
 float_t **WARN_UNUSED Mat_get_projection(float_t l,
                                          float_t r,
                                          float_t t,

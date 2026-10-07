@@ -2,6 +2,7 @@
 
 #include "list.h"
 #include "matrix.h"
+#include "position.h"
 #include "string.h"
 
 #include <math.h>
@@ -147,12 +148,28 @@ void Object_set_rotation_euler(Object *o,
    Position *pos_yaw = Mat4_mult(model_yaw, o->verticies);
    Mat_free(model_yaw);
 
+   float_t **model_pitch = Mat_get_model_axis_rot(
+      (Vector3){ .x = cos(yaw - PI / 2), .y = sin(yaw - PI / 2), .z = 0 },
+      pitch - (PI / 2));
+   Position *pos_pitch = Mat4_mult(model_pitch, pos_yaw);
+   L_free(pos_yaw);
+   Mat_free(model_pitch);
+
+   float_t **model_roll =
+      Mat_get_model_axis_rot((Vector3){ .x = sin(pitch) * cos(yaw),
+                                        .y = sin(pitch) * sin(yaw),
+                                        .z = cos(pitch) },
+                             roll);
+   Position *pos_roll = Mat4_mult(model_roll, pos_pitch);
+   L_free(pos_pitch);
+   Mat_free(model_roll);
+
    L_free(o->verticies_scaled);
    float_t **model_translation = Mat_get_model(
       (Vector3){ .x = o->position.x, .y = o->position.y, .z = o->position.z },
       (Rotation){ 0, 0, 0 });
-   o->verticies_scaled = Mat4_mult(model_translation, pos_yaw);
-
+   o->verticies_scaled = Mat4_mult(model_translation, pos_roll);
    Mat_free(model_translation);
-   L_free(pos_yaw);
+
+   L_free(pos_roll);
 }

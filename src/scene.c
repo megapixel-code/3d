@@ -14,9 +14,10 @@
 
 void Scene_init(Scene *scene)
 {
-   scene->projection = Mat_get_projection(-7, 7, -7, 7, -10, 10);
-   scene->viewport   = Mat_get_viewport(0, 0, 500, 500, 0.1, 500);
-   scene->objects    = NULL;
+   scene->display_mode = DISPLAY_MODE_NONE;
+   scene->projection   = Mat_get_projection(-7, 7, -7, 7, -10, 10);
+   scene->viewport     = Mat_get_viewport(0, 0, 500, 500, 0.1, 500);
+   scene->objects      = NULL;
 
    Object cube = Object_init("cube",
                              (Position){ .x = -4, .y = 0, .z = 8.7 },
@@ -26,6 +27,9 @@ void Scene_init(Scene *scene)
    Object plane = Object_init("plane",
                               (Position){ .x = 0, .y = 0, .z = 0 },
                               (Rotation){ 0, 0, 0 });
+   // Position *temp  = plane.verticies;
+   // L_copy(plane.verticies_scaled, plane.verticies);
+   // L_free(temp);
    L_append(scene->objects, plane);
 
    cube = Object_init("cube",
