@@ -15,6 +15,7 @@
 
 #define DISPLAY_MODE_NONE            0
 #define DISPLAY_MODE_ANIMATION_EULER 1
+#define DISPLAY_MODE_ANIMATION_EXP   2
 
 typedef struct {
    float_t **projection;

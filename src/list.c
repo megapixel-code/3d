@@ -21,7 +21,7 @@ void L_print_f(void *list)
 {
    float_t *l = (float_t *)list;
 
-   for ( int i = 0; i < L_len(list); i++ ) {
+   for ( size_t i = 0; i < L_len(list); i++ ) {
       if ( i == 0 ) {
          printf("%f", l[i]);
       } else {

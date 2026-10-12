@@ -27,5 +27,7 @@ void   Object_set_rotation_euler(Object *o,
                                  float_t yaw,
                                  float_t pitch,
                                  float_t roll);
+void Object_set_rotation_axis_angle(Object *o, Vector3 vect, float_t rotation);
+void Object_set_rotation_exponential_map(Object *o, Vector3 vect);
 
 #endif

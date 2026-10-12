@@ -4,6 +4,7 @@
 #include "matrix.h"
 #include "position.h"
 #include "string.h"
+#include "vector.h"
 
 #include <math.h>
 #include <raylib.h>
@@ -172,4 +173,25 @@ void Object_set_rotation_euler(Object *o,
    Mat_free(model_translation);
 
    L_free(pos_roll);
+}
+
+void Object_set_rotation_axis_angle(Object *o, Vector3 vect, float_t rotation)
+{
+   float_t yaw   = atan2(vect.x, vect.y);
+   float_t pitch = atan2(sqrt(pow(vect.x, 2) + pow(vect.y, 2)), vect.z);
+   float_t roll  = rotation;
+
+   Object_set_rotation_euler(o, yaw, pitch, roll);
+
+   // float_t **model = Mat_get_model_axis_rot(vect, rotation);
+   // L_free(o->verticies_scaled);
+   // o->verticies_scaled = Mat4_mult(model, o->verticies);
+   // Mat_free(model);
+}
+
+void Object_set_rotation_exponential_map(Object *o, Vector3 vect)
+{
+   Vector3 normalized = Vect3_normalize(vect);
+   float_t rotation   = Vect3_length(vect);
+   Object_set_rotation_axis_angle(o, normalized, rotation);
 }
