@@ -123,25 +123,25 @@ int main()
          exit(0);
       }
       if ( IsKeyPressed(KEY_E) ) {
-         if ( scene.display_mode == DISPLAY_MODE_NONE ) {
+         if ( scene.display_mode == DISPLAY_MODE_ANIMATION_EULER ) {
+            scene.display_mode = DISPLAY_MODE_NONE;
+            printf("INFO: %s: Set display_mode to DISPLAY_MODE_NONE\n",
+                   __FUNCTION__);
+         } else {
             scene.display_mode = DISPLAY_MODE_ANIMATION_EULER;
             printf(
                "INFO: %s: Set display_mode to DISPLAY_MODE_ANIMATION_EULER\n",
                __FUNCTION__);
-         } else {
-            scene.display_mode = DISPLAY_MODE_NONE;
-            printf("INFO: %s: Set display_mode to DISPLAY_MODE_NONE\n",
-                   __FUNCTION__);
          }
       }
       if ( IsKeyPressed(KEY_X) ) {
-         if ( scene.display_mode == DISPLAY_MODE_NONE ) {
-            scene.display_mode = DISPLAY_MODE_ANIMATION_EXP;
-            printf("INFO: %s: Set display_mode to DISPLAY_MODE_ANIMATION_EXP\n",
-                   __FUNCTION__);
-         } else {
+         if ( scene.display_mode == DISPLAY_MODE_ANIMATION_EXP ) {
             scene.display_mode = DISPLAY_MODE_NONE;
             printf("INFO: %s: Set display_mode to DISPLAY_MODE_NONE\n",
+                   __FUNCTION__);
+         } else {
+            scene.display_mode = DISPLAY_MODE_ANIMATION_EXP;
+            printf("INFO: %s: Set display_mode to DISPLAY_MODE_ANIMATION_EXP\n",
                    __FUNCTION__);
          }
       }
